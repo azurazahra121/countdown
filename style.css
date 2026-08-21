@@ -2,13 +2,13 @@ body {
   background-color: #e5e5e5;
 }
 #timerScreen {
-  margin: 6% auto
+  margin: 6% auto;
   height: 600px;
   width: 60%;
   border: 1px solid #e5e5e5;
   border-radius: 30px;
   background-color: #fefefe;
-  box-shadow: 10 px 10px 50px grey;
+  box-shadow: 10px 10px 50px grey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +16,7 @@ body {
 
 #timerDisplay {
   border: 1px solid lightgray;
-  heightv 300px;
+  height: 300px;
   width: 28%;
   border-radius: 50%;
   box-shadow: 0px 0px 150px 50px lightgray;
