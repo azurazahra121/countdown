@@ -44,6 +44,29 @@ function playFinishSound() {
     });
 }
 
+// Dark Mode Toggle
+const themeToggle = document.getElementById("themeToggle");
+const htmlElement = document.documentElement;
+const body = document.body;
+
+// Load saved theme preference
+const savedTheme = localStorage.getItem("theme") || "light";
+if (savedTheme === "dark") {
+    body.classList.add("dark-mode");
+    themeToggle.textContent = "☀️";
+} else {
+    body.classList.remove("dark-mode");
+    themeToggle.textContent = "🌙";
+}
+
+// Toggle theme
+themeToggle.addEventListener("click", function () {
+    body.classList.toggle("dark-mode");
+    const isDarkMode = body.classList.contains("dark-mode");
+    themeToggle.textContent = isDarkMode ? "☀️" : "🌙";
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+});
+
 // Selecting elements
 const timerDisplay = document.getElementById("time");
 const startButton = document.getElementById("startBtn");
@@ -98,7 +121,7 @@ startButton.addEventListener("click", function () {
         isRunning = true;
         startButton.textContent = "Stop";
         inputContainer.style.display = "none"; // Hide inputs while running
-        timerContainer.style.border = "1px solid lightgray";
+        timerContainer.style.border = "1px solid var(--border-color)";
         
         interval = setInterval(() => {
             if (seconds > 0 || minutes > 0) {
@@ -121,7 +144,7 @@ startButton.addEventListener("click", function () {
         isRunning = false;
         startButton.textContent = "Start";
         inputContainer.style.display = "flex"; // Show inputs again
-        timerContainer.style.border = "1px solid #e0e0e0";
+        timerContainer.style.border = "1px solid var(--border-color)";
     }
 });
 
@@ -134,7 +157,7 @@ resetButton.addEventListener("click", function () {
     updateTimer();
     startButton.textContent = "Start";
     inputContainer.style.display = "flex"; // Show inputs again
-    timerContainer.style.border = "1px solid #e0e0e0";
+    timerContainer.style.border = "1px solid var(--border-color)";
 });
 
 // Close button functionality
@@ -148,7 +171,7 @@ closeButton.addEventListener("click", function () {
     updateTimer();
     startButton.textContent = "Start";
     inputContainer.style.display = "flex";
-    timerContainer.style.border = "1px solid #e0e0e0";
+    timerContainer.style.border = "1px solid var(--border-color)";
 });
 
 // Initialize display
