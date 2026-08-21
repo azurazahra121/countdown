@@ -13,26 +13,100 @@
       <span class="theme-icon">🌙</span>
     </button>
 
+    <!-- Settings Menu -->
+    <button id="settingsBtn" class="settings-btn" title="Settings">
+      <span>⚙️</span>
+    </button>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button class="modal-close" id="closeSettingsModal">×</button>
+        </div>
+        <div class="modal-body">
+          <!-- Password Section -->
+          <div class="settings-section">
+            <h3>🔐 Password Protection</h3>
+            <div id="passwordStatus" class="password-status unlocked">Status: Unlocked</div>
+            <div id="passwordForm" class="password-form">
+              <input type="password" id="passwordInput" placeholder="Set a password...">
+              <button id="setPasswordBtn" class="btn-primary">Set Password</button>
+            </div>
+            <div id="lockForm" class="lock-form hidden">
+              <input type="password" id="unlockInput" placeholder="Enter password...">
+              <button id="unlockBtn" class="btn-primary">Unlock</button>
+              <button id="changePwdBtn" class="btn-secondary">Change Password</button>
+            </div>
+          </div>
+
+          <!-- Volume Control -->
+          <div class="settings-section">
+            <h3>🔊 Sound Volume</h3>
+            <div class="volume-control">
+              <input type="range" id="volumeSlider" min="0" max="100" value="50" class="slider">
+              <span id="volumeValue">50%</span>
+            </div>
+            <button id="testSoundBtn" class="btn-secondary">Test Sound</button>
+          </div>
+
+          <!-- Presets Section -->
+          <div class="settings-section" id="presetsSection">
+            <h3>💾 Saved Presets</h3>
+            <div id="presetsList" class="presets-list"></div>
+            <div class="preset-input-group">
+              <input type="text" id="presetName" placeholder="Preset name (e.g., 20 min Focus)">
+              <button id="savePresetBtn" class="btn-secondary">Save Current</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <section id="timerScreen">
       <div id="timer-container">
         <h4 id="author">by Azura Studio</h4>
         <p id="text">I wish this countdown help you</p>
         
-        <!-- Input fields for customization -->
-        <div id="inputContainer" class="input-group">
-          <input type="number" id="minutesInput" min="0" max="59" placeholder="Minutes" value="1">
-          <span>:</span>
-          <input type="number" id="secondsInput" min="0" max="59" placeholder="Seconds" value="30">
+        <!-- Scroll Wheel Picker -->
+        <div class="scroll-wheel-container">
+          <div class="wheel-column">
+            <div class="wheel-label">Hours</div>
+            <div class="scroll-wheel" id="hoursWheel">
+              <div class="wheel-item prev"></div>
+              <div class="wheel-items" id="hoursItems"></div>
+              <div class="wheel-item next"></div>
+            </div>
+          </div>
+
+          <div class="wheel-column">
+            <div class="wheel-label">Minutes</div>
+            <div class="scroll-wheel" id="minutesWheel">
+              <div class="wheel-item prev"></div>
+              <div class="wheel-items" id="minutesItems"></div>
+              <div class="wheel-item next"></div>
+            </div>
+          </div>
+
+          <div class="wheel-column">
+            <div class="wheel-label">Seconds</div>
+            <div class="scroll-wheel" id="secondsWheel">
+              <div class="wheel-item prev"></div>
+              <div class="wheel-items" id="secondsItems"></div>
+              <div class="wheel-item next"></div>
+            </div>
+          </div>
         </div>
         
         <div id="timerDisplay">
-          <h1 id="time">01:30</h1>
+          <h1 id="time">00:20:00</h1>
         </div>
         
         <div id="button-container">
           <button id="startBtn" class="button">Start</button>
           <button id="resetBtn" class="button">Reset</button>
-          <button id="closeBtn" class="button">&times;</button>
+          <button id="closeBtn" class="button">×</button>
         </div>
       </div>
     </section>
