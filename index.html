@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timer App</title>
+  <title>Countdown Timer</title>
   <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -12,9 +12,18 @@
       <div id="timer-container">
         <h4 id="author">by Azura Studio</h4>
         <p id="text">I wish this countdown help you</p>
-        <div id="timerDisplay">
-          <h1 id="time">00:00</h1>
+        
+        <!-- Input fields for customization -->
+        <div id="inputContainer" class="input-group">
+          <input type="number" id="minutesInput" min="0" max="59" placeholder="Minutes" value="1">
+          <span>:</span>
+          <input type="number" id="secondsInput" min="0" max="59" placeholder="Seconds" value="30">
         </div>
+        
+        <div id="timerDisplay">
+          <h1 id="time">01:30</h1>
+        </div>
+        
         <div id="button-container">
           <button id="startBtn" class="button">Start</button>
           <button id="resetBtn" class="button">Reset</button>

@@ -1,41 +1,171 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #e5e5e5;
-}
-#timerScreen {
-  margin: 6% auto;
-  height: 600px;
-  width: 60%;
-  border: 1px solid #e5e5e5;
-  border-radius: 30px;
-  background-color: #fefefe;
-  box-shadow: 10px 10px 50px grey;
+  font-family: 'Courier New', Courier, monospace;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#timerScreen {
+  height: 600px;
+  width: 60%;
+  max-width: 600px;
+  border: 1px solid #e5e5e5;
+  border-radius: 30px;
+  background-color: #fefefe;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+#timer-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+#author {
+  font-size: 12px;
+  color: #999;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+#text {
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+  font-weight: 300;
+}
+
+/* Input fields styling */
+#inputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#inputContainer input {
+  width: 50px;
+  padding: 8px;
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #666;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+#inputContainer input:focus {
+  outline: none;
+  border-color: #999;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#inputContainer span {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ccc;
+  margin: 0 5px;
+}
+
+/* Timer Display */
 #timerDisplay {
-  border: 1px solid lightgray;
-  height: 300px;
-  width: 28%;
+  border: 1px solid #e0e0e0;
+  height: 280px;
+  width: 280px;
   border-radius: 50%;
-  box-shadow: 0px 0px 150px 50px lightgray;
+  box-shadow: 0 0 80px 30px rgba(200, 200, 200, 0.3);
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  transition: all 0.3s ease;
 }
 
+#time {
+  font-size: 72px;
+  font-weight: 300;
+  color: #333;
+  letter-spacing: 2px;
+}
+
+/* Buttons container */
+#button-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Button styling */
 .button {
   border: none;
-  background-color: #fefefe;
+  background-color: transparent;
   font-family: 'Courier New', Courier, monospace;
-  color: gray;
-  padding: 10px;
-  margin: 5px;
+  color: #999;
+  padding: 12px 20px;
+  margin: 0 5px;
   cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
 }
 
 .button:hover {
-  color: black;
+  color: #333;
+  border-bottom-color: #333;
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  #timerScreen {
+    width: 90%;
+    height: auto;
+    padding: 30px 20px;
+  }
+
+  #timer-container {
+    gap: 20px;
+  }
+
+  #timerDisplay {
+    height: 220px;
+    width: 220px;
+    box-shadow: 0 0 60px 20px rgba(200, 200, 200, 0.2);
+  }
+
+  #time {
+    font-size: 48px;
+  }
 }
