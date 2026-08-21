@@ -1,8 +1,8 @@
 // Selecting elements
-const timerDisplay = document.getElemenById("time");
+const timerDisplay = document.getElementById("time");
 const startButton = document.getElementById("startBtn");
 const resetButton = document.getElementById("resetBtn");
-const timerContainer = document.getElemen5ById("timerDisplay");
+const timerContainer = document.getElementById("timerDisplay");
 
 let isRunning = false;
 let interval;
@@ -38,7 +38,7 @@ startButton.addEventListener("click", function () {
     } else {
         clearInterval(interval);
         isRunning = false;
-        startButyon.textContent = "Start";
+        startButton.textContent = "Start";
         timerContainer.style.border = "2px solid red";
     }
 });
