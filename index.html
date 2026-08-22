@@ -3,114 +3,571 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown Timer</title>
-  <link href="style.css" rel="stylesheet">
+  <title>Timer - by Azura Studio</title>
+  <style>
+    /* CSS Variables for Light / Dark Mode */
+    :root {
+      --bg-body: #e0e0e0;
+      --bg-card: #ffffff;
+      --text-main: #111111;
+      --text-sub: #333333;
+      --border-color: #d0d0d0;
+      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --circle-bg: #ffffff;
+      --circle-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+      --glow-bg: radial-gradient(circle, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.03) 40%, rgba(255, 255, 255, 0) 70%);
+      --slot-bg: rgba(0, 0, 0, 0.05);
+      --slot-border: rgba(0, 0, 0, 0.12);
+      --lock-bg: rgba(255, 255, 255, 0.96);
+      --input-bg: #ffffff;
+      --btn-unlock-bg: #111111;
+      --btn-unlock-text: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --text-main: #f0f0f0;
+      --text-sub: #cccccc;
+      --border-color: #333333;
+      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --circle-bg: #282828;
+      --circle-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+      --glow-bg: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(0, 0, 0, 0) 70%);
+      --slot-bg: rgba(255, 255, 255, 0.08);
+      --slot-border: rgba(255, 255, 255, 0.15);
+      --lock-bg: rgba(30, 30, 30, 0.96);
+      --input-bg: #2a2a2a;
+      --btn-unlock-bg: #ffffff;
+      --btn-unlock-text: #111111;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-body);
+      font-family: 'Courier New', Courier, monospace;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Primary Card */
+    .card {
+      width: 800px;
+      height: 440px;
+      background-color: var(--bg-card);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Brand Header */
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    .brand-title {
+      font-weight: bold;
+      font-size: 1rem;
+      color: var(--text-main);
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    /* Bottom Right Controls */
+    .controls {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      background-color: var(--bg-card);
+      z-index: 2;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: opacity 0.2s, color 0.3s ease;
+      min-width: 45px;
+    }
+
+    .btn:hover {
+      opacity: 0.6;
+    }
+
+    .theme-toggle-btn {
+      font-size: 0.9rem;
+      padding: 0 2px;
+      min-width: auto;
+    }
+
+    /* Central Circle UI */
+    .circle-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .circle-glow {
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: var(--glow-bg);
+      pointer-events: none;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .circle-main {
+      width: 250px;
+      height: 250px;
+      background-color: var(--circle-bg);
+      border-radius: 50%;
+      box-shadow: var(--circle-shadow);
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Wheel Time Picker Styles */
+    .picker-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 120px;
+      width: 100%;
+      position: relative;
+    }
+
+    .picker-container::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      right: 10px;
+      height: 40px;
+      transform: translateY(-50%);
+      background: var(--slot-bg);
+      border-top: 1px solid var(--slot-border);
+      border-bottom: 1px solid var(--slot-border);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .wheel-column {
+      height: 100%;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+      width: 52px;
+      text-align: center;
+      transition: transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .wheel-column::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wheel-column.number-pulse {
+      transform: scale(1.18);
+    }
+
+    .wheel-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: var(--text-main);
+      scroll-snap-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+
+    .colon-separator {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-main);
+      padding: 0 2px;
+      line-height: 40px;
+      z-index: 2;
+      transition: color 0.3s ease;
+    }
+
+    /* Lock Screen Overlay */
+    .lock-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--lock-bg);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      transition: opacity 0.3s ease, background-color 0.3s ease;
+    }
+
+    .lock-overlay.hidden {
+      display: none;
+    }
+
+    .lock-title {
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--text-main);
+    }
+
+    .passcode-input {
+      font-family: inherit;
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background-color: var(--input-bg);
+      color: var(--text-main);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      outline: none;
+      width: 160px;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .unlock-btn {
+      padding: 8px 20px;
+      background-color: var(--btn-unlock-bg);
+      color: var(--btn-unlock-text);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .error-msg {
+      color: #ff4d4d;
+      font-size: 0.75rem;
+      height: 12px;
+    }
+  </style>
 </head>
 <body>
-  <main>
-    <!-- Dark Mode Toggle -->
-    <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">
-      <span class="theme-icon">🌙</span>
-    </button>
 
-    <!-- Settings Menu -->
-    <button id="settingsBtn" class="settings-btn" title="Settings">
-      <span>⚙️</span>
-    </button>
+  <div class="card">
+    <!-- Lock Screen Overlay -->
+    <div class="lock-overlay" id="lockOverlay">
+      <div class="lock-title">Please fill the password</div>
+      <input type="password" id="passInput" class="passcode-input" maxlength="4" placeholder="••••">
+      <div class="error-msg" id="errorMsg"></div>
+      <button class="unlock-btn" id="unlockBtn">Unlock</button>
+    </div>
 
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal hidden">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Settings</h2>
-          <button class="modal-close" id="closeSettingsModal">×</button>
-        </div>
-        <div class="modal-body">
-          <!-- Password Section -->
-          <div class="settings-section">
-            <h3>🔐 Password Protection</h3>
-            <div id="passwordStatus" class="password-status unlocked">Status: Unlocked</div>
-            <div id="passwordForm" class="password-form">
-              <input type="password" id="passwordInput" placeholder="Set a password...">
-              <button id="setPasswordBtn" class="btn-primary">Set Password</button>
-            </div>
-            <div id="lockForm" class="lock-form hidden">
-              <input type="password" id="unlockInput" placeholder="Enter password...">
-              <button id="unlockBtn" class="btn-primary">Unlock</button>
-              <button id="changePwdBtn" class="btn-secondary">Change Password</button>
-            </div>
-          </div>
+    <!-- Header Brand -->
+    <div class="brand">
+      <span class="brand-title">Timer</span>
+      <span class="brand-subtitle">by Azura Studio</span>
+    </div>
 
-          <!-- Volume Control -->
-          <div class="settings-section">
-            <h3>🔊 Sound Volume</h3>
-            <div class="volume-control">
-              <input type="range" id="volumeSlider" min="0" max="100" value="50" class="slider">
-              <span id="volumeValue">50%</span>
-            </div>
-            <button id="testSoundBtn" class="btn-secondary">Test Sound</button>
-          </div>
-
-          <!-- Presets Section -->
-          <div class="settings-section" id="presetsSection">
-            <h3>💾 Saved Presets</h3>
-            <div id="presetsList" class="presets-list"></div>
-            <div class="preset-input-group">
-              <input type="text" id="presetName" placeholder="Preset name (e.g., 20 min Focus)">
-              <button id="savePresetBtn" class="btn-secondary">Save Current</button>
-            </div>
-          </div>
+    <!-- Central Interactive Wheel Timer -->
+    <div class="circle-container">
+      <div class="circle-glow" id="circleGlow"></div>
+      <div class="circle-main" id="circleMain">
+        <div class="picker-container">
+          <div class="wheel-column" id="hoursWheel"></div>
+          <span class="colon-separator">:</span>
+          <div class="wheel-column" id="minutesWheel"></div>
+          <span class="colon-separator">:</span>
+          <div class="wheel-column" id="secondsWheel"></div>
         </div>
       </div>
     </div>
 
-    <section id="timerScreen">
-      <div id="timer-container">
-        <h4 id="author">by Azura Studio</h4>
-        <p id="text">I wish this countdown help you</p>
-        
-        <!-- Scroll Wheel Picker -->
-        <div class="scroll-wheel-container">
-          <div class="wheel-column">
-            <div class="wheel-label">Hours</div>
-            <div class="scroll-wheel" id="hoursWheel">
-              <div class="wheel-item prev"></div>
-              <div class="wheel-items" id="hoursItems"></div>
-              <div class="wheel-item next"></div>
-            </div>
-          </div>
+    <!-- Bottom Right Controls -->
+    <div class="controls">
+      <button class="btn" id="startBtn">Start</button>
+      <button class="btn" id="resetBtn">Reset</button>
+      <button class="btn" id="lockBtn">Lock</button>
+      <button class="btn theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark Mode">🌑</button>
+    </div>
+  </div>
 
-          <div class="wheel-column">
-            <div class="wheel-label">Minutes</div>
-            <div class="scroll-wheel" id="minutesWheel">
-              <div class="wheel-item prev"></div>
-              <div class="wheel-items" id="minutesItems"></div>
-              <div class="wheel-item next"></div>
-            </div>
-          </div>
+  <script>
+    // Audio Context Setup (800 Hz Custom Sound)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-          <div class="wheel-column">
-            <div class="wheel-label">Seconds</div>
-            <div class="scroll-wheel" id="secondsWheel">
-              <div class="wheel-item prev"></div>
-              <div class="wheel-items" id="secondsItems"></div>
-              <div class="wheel-item next"></div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="timerDisplay">
-          <h1 id="time">00:20:00</h1>
-        </div>
-        
-        <div id="button-container">
-          <button id="startBtn" class="button">Start</button>
-          <button id="resetBtn" class="button">Reset</button>
-          <button id="closeBtn" class="button">×</button>
-        </div>
-      </div>
-    </section>
-  </main>
-  <script src="script.js"></script>
+    function play800HzPulse(startTime, duration, volume = 0.12) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, startTime);
+
+      // Smooth attack & decay
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(volume, startTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    }
+
+    function playClickSound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      play800HzPulse(audioCtx.currentTime, 0.08, 0.15);
+    }
+
+    function play800HzFinishChime() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      play800HzPulse(now, 0.12, 0.18);
+      play800HzPulse(now + 0.16, 0.12, 0.18);
+      play800HzPulse(now + 0.32, 0.25, 0.22);
+    }
+
+    // Wheel Setup
+    const hoursWheel = document.getElementById('hoursWheel');
+    const minutesWheel = document.getElementById('minutesWheel');
+    const secondsWheel = document.getElementById('secondsWheel');
+    const circleGlow = document.getElementById('circleGlow');
+
+    const ITEM_HEIGHT = 40;
+    const REPEAT_COUNT = 5;
+
+    function populateInfiniteWheel(element, max) {
+      element.innerHTML = '';
+      
+      const topSpacer = document.createElement('div');
+      topSpacer.style.height = `${ITEM_HEIGHT}px`;
+      element.appendChild(topSpacer);
+
+      for (let r = 0; r < REPEAT_COUNT; r++) {
+        for (let i = 0; i <= max; i++) {
+          const item = document.createElement('div');
+          item.className = 'wheel-item';
+          item.textContent = String(i).padStart(2, '0');
+          element.appendChild(item);
+        }
+      }
+
+      const bottomSpacer = document.createElement('div');
+      bottomSpacer.style.height = `${ITEM_HEIGHT}px`;
+      element.appendChild(bottomSpacer);
+
+      element.addEventListener('scroll', () => {
+        const totalItems = max + 1;
+        const totalHeight = totalItems * ITEM_HEIGHT;
+        const currentScroll = element.scrollTop;
+
+        if (currentScroll < totalHeight) {
+          element.scrollTop += totalHeight * 2;
+        } else if (currentScroll >= totalHeight * (REPEAT_COUNT - 1)) {
+          element.scrollTop -= totalHeight * 2;
+        }
+      });
+    }
+
+    populateInfiniteWheel(hoursWheel, 23);
+    populateInfiniteWheel(minutesWheel, 59);
+    populateInfiniteWheel(secondsWheel, 59);
+
+    function getSelectedValue(wheel, max) {
+      const totalItems = max + 1;
+      const rawIndex = Math.round(wheel.scrollTop / ITEM_HEIGHT);
+      const index = Math.max(0, rawIndex);
+      return index % totalItems;
+    }
+
+    function scrollToValue(wheel, value, max) {
+      const totalItems = max + 1;
+      const baseIndex = totalItems * 2;
+      const targetIndex = baseIndex + value;
+      wheel.scrollTo({
+        top: targetIndex * ITEM_HEIGHT,
+        behavior: 'smooth'
+      });
+    }
+
+    setTimeout(() => {
+      scrollToValue(hoursWheel, 0, 23);
+      scrollToValue(minutesWheel, 0, 59);
+      scrollToValue(secondsWheel, 0, 59);
+    }, 50);
+
+    // Timer Logic & Dynamic Toggle
+    let timerInterval = null;
+    let totalSeconds = 0;
+    let prevH = 0, prevM = 0, prevS = 0;
+
+    function triggerSpecificPulse(elements) {
+      elements.forEach(el => {
+        el.classList.add('number-pulse');
+        setTimeout(() => {
+          el.classList.remove('number-pulse');
+        }, 120);
+      });
+    }
+
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function pauseTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      startBtn.textContent = 'Start';
+      circleGlow.style.transform = 'scale(1)';
+    }
+
+    startBtn.addEventListener('click', () => {
+      playClickSound();
+
+      if (timerInterval) {
+        pauseTimer();
+        return;
+      }
+
+      if (totalSeconds <= 0) {
+        const h = getSelectedValue(hoursWheel, 23);
+        const m = getSelectedValue(minutesWheel, 59);
+        const s = getSelectedValue(secondsWheel, 59);
+        totalSeconds = h * 3600 + m * 60 + s;
+      }
+
+      if (totalSeconds <= 0) return;
+
+      startBtn.textContent = 'Pause';
+      circleGlow.style.transform = 'scale(1.18)';
+
+      timerInterval = setInterval(() => {
+        totalSeconds--;
+
+        const curH = Math.floor(totalSeconds / 3600);
+        const curM = Math.floor((totalSeconds % 3600) / 60);
+        const curS = totalSeconds % 60;
+
+        scrollToValue(hoursWheel, curH, 23);
+        scrollToValue(minutesWheel, curM, 59);
+        scrollToValue(secondsWheel, curS, 59);
+
+        const changedColumns = [];
+        if (curS !== prevS) changedColumns.push(secondsWheel);
+        if (curM !== prevM) changedColumns.push(minutesWheel);
+        if (curH !== prevH) changedColumns.push(hoursWheel);
+
+        triggerSpecificPulse(changedColumns);
+
+        prevH = curH;
+        prevM = curM;
+        prevS = curS;
+
+        if (totalSeconds <= 0) {
+          pauseTimer();
+          totalSeconds = 0;
+          play800HzFinishChime();
+        }
+      }, 1000);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      playClickSound();
+      pauseTimer();
+      totalSeconds = 0;
+      scrollToValue(hoursWheel, 0, 23);
+      scrollToValue(minutesWheel, 0, 59);
+      scrollToValue(secondsWheel, 0, 59);
+      triggerSpecificPulse([hoursWheel, minutesWheel, secondsWheel]);
+    });
+
+    // Dark Mode Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    let isDarkMode = false;
+
+    themeToggleBtn.addEventListener('click', () => {
+      playClickSound();
+      isDarkMode = !isDarkMode;
+      if (isDarkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggleBtn.textContent = '🌕';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggleBtn.textContent = '🌑';
+      }
+    });
+
+    // Lock Screen System
+    const DEFAULT_PASS = "1234";
+    const lockOverlay = document.getElementById('lockOverlay');
+    const passInput = document.getElementById('passInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const lockBtn = document.getElementById('lockBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    unlockBtn.addEventListener('click', () => {
+      if (passInput.value === DEFAULT_PASS) {
+        playClickSound();
+        lockOverlay.classList.add('hidden');
+        passInput.value = '';
+        errorMsg.textContent = '';
+      } else {
+        errorMsg.textContent = 'Incorrect Password!';
+        passInput.value = '';
+      }
+    });
+
+    lockBtn.addEventListener('click', () => {
+      playClickSound();
+      lockOverlay.classList.remove('hidden');
+    });
+  </script>
+
 </body>
 </html>
